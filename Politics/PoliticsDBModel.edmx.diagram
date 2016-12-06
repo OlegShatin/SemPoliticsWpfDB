@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="0d9146a3aa604a06a98a45e2d7ad34af" Name="Diagram1">
+        <EntityTypeShape EntityType="Model.PoliticsModel.candidates" Width="1.5" PointX="10.5" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PoliticsModel.candidates_lists" Width="1.5" PointX="5.25" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PoliticsModel.comments" Width="1.5" PointX="3" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PoliticsModel.election_types" Width="1.5" PointX="0.75" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PoliticsModel.elections" Width="1.5" PointX="3" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PoliticsModel.messages" Width="1.5" PointX="10.5" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PoliticsModel.news" Width="1.5" PointX="0.75" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PoliticsModel.parties" Width="1.5" PointX="8.25" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PoliticsModel.supporters" Width="1.5" PointX="10.5" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PoliticsModel.user_roles" Width="1.5" PointX="6" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PoliticsModel.users" Width="1.5" PointX="8.25" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.PoliticsModel.cookies" Width="1.5" PointX="10.5" PointY="11.75" IsExpanded="true" />
+        <AssociationConnector Association="Model.PoliticsModel.candidates_lists_candidate_id_fkey" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.candidates_party_fkey" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.candidates_users__fk" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.candidates_lists_election_id_fkey" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.comments_article_id_fkey" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.comments_parent_comment_id_fkey" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.elections_type_fkey" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.messages_recepient_id_fkey" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.messages_sender_id_fkey" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.supporters_party_id_fkey" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.users_role_fkey" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.cookies_user_id_fkey" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.votes" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,903 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище model.politicsModel" Provider="Npgsql" ProviderManifestToken="9.4.9" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="candidates">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="party" Type="int4" />
+          <Property Name="name" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="info" Type="text" />
+          <Property Name="achievements" Type="text" />
+          <Property Name="election_program" Type="text" />
+          <Property Name="image_src" Type="varchar" MaxLength="64" />
+          <Property Name="agent_id" Type="int4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="candidates_lists">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="election_id" Type="int4" Nullable="false" />
+          <Property Name="candidate_id" Type="int4" Nullable="false" />
+          <Property Name="votes" Type="int4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="comments">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="user_id" Type="int4" Nullable="false" />
+          <Property Name="article_id" Type="int4" Nullable="false" />
+          <Property Name="parent_comment_id" Type="int4" />
+          <Property Name="comment_text" Type="text" Nullable="false" />
+          <Property Name="publication_date" Type="timestamptz" Precision="7" Nullable="false" />
+          <Property Name="rating" Type="int4" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "politics_web_app.public.cookies" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="cookies">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="int4" Nullable="false" />
+          <Property Name="value" Type="varchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="election_types">
+          <Key>
+            <PropertyRef Name="type" />
+          </Key>
+          <Property Name="type" Type="varchar" MaxLength="16" Nullable="false" />
+        </EntityType>
+        <EntityType Name="elections">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="type" Type="varchar" MaxLength="16" Nullable="false" />
+          <Property Name="start_time" Type="timestamptz" Precision="7" Nullable="false" />
+          <Property Name="finish_time" Type="timestamptz" Precision="7" />
+        </EntityType>
+        <EntityType Name="messages">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="sender_id" Type="int4" Nullable="false" />
+          <Property Name="recepient_id" Type="int4" Nullable="false" />
+          <Property Name="message_text" Type="text" Nullable="false" />
+          <Property Name="sending_time" Type="timestamptz" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="news">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="headline" Type="varchar" MaxLength="100" />
+          <Property Name="content" Type="text" />
+          <Property Name="datetime" Type="timestamptz" Precision="7" />
+        </EntityType>
+        <EntityType Name="parties">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="seats_in_parliament" Type="int4" />
+        </EntityType>
+        <EntityType Name="supporters">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="surname" Type="varchar" MaxLength="30" />
+          <Property Name="image_src" Type="varchar" MaxLength="64" />
+          <Property Name="party_id" Type="int4" Nullable="false" />
+        </EntityType>
+        <EntityType Name="user_roles">
+          <Key>
+            <PropertyRef Name="role" />
+          </Key>
+          <Property Name="role" Type="varchar" MaxLength="16" Nullable="false" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int4" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="surname" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="patronymic" Type="varchar" MaxLength="20" />
+          <Property Name="birthday" Type="date" />
+          <Property Name="email" Type="varchar" MaxLength="8000" Nullable="false" />
+          <Property Name="passport_series" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="passport_number" Type="varchar" MaxLength="6" Nullable="false" />
+          <Property Name="password_hash" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="timezone" Type="int4" Nullable="false" />
+          <Property Name="role" Type="varchar" MaxLength="16" Nullable="false" />
+        </EntityType>
+        <EntityType Name="votes">
+          <Key>
+            <PropertyRef Name="user_id" />
+            <PropertyRef Name="election_id" />
+          </Key>
+          <Property Name="user_id" Type="int4" Nullable="false" />
+          <Property Name="election_id" Type="int4" Nullable="false" />
+        </EntityType>
+        <Association Name="candidates_lists_candidate_id_fkey">
+          <End Role="candidates" Type="Self.candidates" Multiplicity="1" />
+          <End Role="candidates_lists" Type="Self.candidates_lists" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="candidates">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="candidates_lists">
+              <PropertyRef Name="candidate_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="candidates_lists_election_id_fkey">
+          <End Role="elections" Type="Self.elections" Multiplicity="1" />
+          <End Role="candidates_lists" Type="Self.candidates_lists" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="elections">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="candidates_lists">
+              <PropertyRef Name="election_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="candidates_party_fkey">
+          <End Role="parties" Type="Self.parties" Multiplicity="0..1" />
+          <End Role="candidates" Type="Self.candidates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="parties">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="candidates">
+              <PropertyRef Name="party" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="candidates_users__fk">
+          <End Role="users" Type="Self.users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="candidates" Type="Self.candidates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="candidates">
+              <PropertyRef Name="agent_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="comments_article_id_fkey">
+          <End Role="news" Type="Self.news" Multiplicity="1" />
+          <End Role="comments" Type="Self.comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="news">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="comments">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="comments_parent_comment_id_fkey">
+          <End Role="comments" Type="Self.comments" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="comments1" Type="Self.comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="comments">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="comments1">
+              <PropertyRef Name="parent_comment_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="cookies_user_id_fkey">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="cookies" Type="Self.cookies" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="cookies">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="elections_type_fkey">
+          <End Role="election_types" Type="Self.election_types" Multiplicity="1" />
+          <End Role="elections" Type="Self.elections" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="election_types">
+              <PropertyRef Name="type" />
+            </Principal>
+            <Dependent Role="elections">
+              <PropertyRef Name="type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="messages_recepient_id_fkey">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="messages" Type="Self.messages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="messages">
+              <PropertyRef Name="recepient_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="messages_sender_id_fkey">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="messages" Type="Self.messages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="messages">
+              <PropertyRef Name="sender_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="supporters_party_id_fkey">
+          <End Role="parties" Type="Self.parties" Multiplicity="1" />
+          <End Role="supporters" Type="Self.supporters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="parties">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="supporters">
+              <PropertyRef Name="party_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="users_role_fkey">
+          <End Role="user_roles" Type="Self.user_roles" Multiplicity="1" />
+          <End Role="users" Type="Self.users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user_roles">
+              <PropertyRef Name="role" />
+            </Principal>
+            <Dependent Role="users">
+              <PropertyRef Name="role" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="votes_election_id_fkey">
+          <End Role="elections" Type="Self.elections" Multiplicity="1" />
+          <End Role="votes" Type="Self.votes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="elections">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="votes">
+              <PropertyRef Name="election_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="votes_user_id_fkey">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="votes" Type="Self.votes" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="votes">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище modelpoliticsModelContainer">
+          <EntitySet Name="candidates" EntityType="Self.candidates" Schema="public" store:Type="Tables" />
+          <EntitySet Name="candidates_lists" EntityType="Self.candidates_lists" Schema="public" store:Type="Tables" />
+          <EntitySet Name="comments" EntityType="Self.comments" Schema="public" store:Type="Tables" />
+          <EntitySet Name="election_types" EntityType="Self.election_types" Schema="public" store:Type="Tables" />
+          <EntitySet Name="elections" EntityType="Self.elections" Schema="public" store:Type="Tables" />
+          <EntitySet Name="messages" EntityType="Self.messages" Schema="public" store:Type="Tables" />
+          <EntitySet Name="news" EntityType="Self.news" Schema="public" store:Type="Tables" />
+          <EntitySet Name="parties" EntityType="Self.parties" Schema="public" store:Type="Tables" />
+          <EntitySet Name="supporters" EntityType="Self.supporters" Schema="public" store:Type="Tables" />
+          <EntitySet Name="user_roles" EntityType="Self.user_roles" Schema="public" store:Type="Tables" />
+          <EntitySet Name="users" EntityType="Self.users" Schema="public" store:Type="Tables" />
+          <EntitySet Name="votes" EntityType="Self.votes" Schema="public" store:Type="Tables" />
+          <EntitySet Name="cookies" EntityType="Self.cookies" store:Type="Tables" store:Schema="public">
+            <DefiningQuery>SELECT "cookies"."user_id", "cookies"."value" FROM "public"."cookies" AS "cookies"</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="candidates_lists_candidate_id_fkey" Association="Self.candidates_lists_candidate_id_fkey">
+            <End Role="candidates" EntitySet="candidates" />
+            <End Role="candidates_lists" EntitySet="candidates_lists" />
+          </AssociationSet>
+          <AssociationSet Name="candidates_lists_election_id_fkey" Association="Self.candidates_lists_election_id_fkey">
+            <End Role="elections" EntitySet="elections" />
+            <End Role="candidates_lists" EntitySet="candidates_lists" />
+          </AssociationSet>
+          <AssociationSet Name="candidates_party_fkey" Association="Self.candidates_party_fkey">
+            <End Role="parties" EntitySet="parties" />
+            <End Role="candidates" EntitySet="candidates" />
+          </AssociationSet>
+          <AssociationSet Name="candidates_users__fk" Association="Self.candidates_users__fk">
+            <End Role="users" EntitySet="users" />
+            <End Role="candidates" EntitySet="candidates" />
+          </AssociationSet>
+          <AssociationSet Name="comments_article_id_fkey" Association="Self.comments_article_id_fkey">
+            <End Role="news" EntitySet="news" />
+            <End Role="comments" EntitySet="comments" />
+          </AssociationSet>
+          <AssociationSet Name="comments_parent_comment_id_fkey" Association="Self.comments_parent_comment_id_fkey">
+            <End Role="comments" EntitySet="comments" />
+            <End Role="comments1" EntitySet="comments" />
+          </AssociationSet>
+          <AssociationSet Name="cookies_user_id_fkey" Association="Self.cookies_user_id_fkey">
+            <End Role="users" EntitySet="users" />
+            <End Role="cookies" EntitySet="cookies" />
+          </AssociationSet>
+          <AssociationSet Name="elections_type_fkey" Association="Self.elections_type_fkey">
+            <End Role="election_types" EntitySet="election_types" />
+            <End Role="elections" EntitySet="elections" />
+          </AssociationSet>
+          <AssociationSet Name="messages_recepient_id_fkey" Association="Self.messages_recepient_id_fkey">
+            <End Role="users" EntitySet="users" />
+            <End Role="messages" EntitySet="messages" />
+          </AssociationSet>
+          <AssociationSet Name="messages_sender_id_fkey" Association="Self.messages_sender_id_fkey">
+            <End Role="users" EntitySet="users" />
+            <End Role="messages" EntitySet="messages" />
+          </AssociationSet>
+          <AssociationSet Name="supporters_party_id_fkey" Association="Self.supporters_party_id_fkey">
+            <End Role="parties" EntitySet="parties" />
+            <End Role="supporters" EntitySet="supporters" />
+          </AssociationSet>
+          <AssociationSet Name="users_role_fkey" Association="Self.users_role_fkey">
+            <End Role="user_roles" EntitySet="user_roles" />
+            <End Role="users" EntitySet="users" />
+          </AssociationSet>
+          <AssociationSet Name="votes_election_id_fkey" Association="Self.votes_election_id_fkey">
+            <End Role="elections" EntitySet="elections" />
+            <End Role="votes" EntitySet="votes" />
+          </AssociationSet>
+          <AssociationSet Name="votes_user_id_fkey" Association="Self.votes_user_id_fkey">
+            <End Role="users" EntitySet="users" />
+            <End Role="votes" EntitySet="votes" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model.PoliticsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="candidates">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="party" Type="Int32" />
+          <Property Name="name" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="info" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="achievements" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="election_program" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="image_src" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="agent_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="candidates_lists" Relationship="Self.candidates_lists_candidate_id_fkey" FromRole="candidates" ToRole="candidates_lists" />
+          <NavigationProperty Name="parties" Relationship="Self.candidates_party_fkey" FromRole="candidates" ToRole="parties" />
+          <NavigationProperty Name="users" Relationship="Self.candidates_users__fk" FromRole="candidates" ToRole="users" />
+        </EntityType>
+        <EntityType Name="candidates_lists">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="election_id" Type="Int32" Nullable="false" />
+          <Property Name="candidate_id" Type="Int32" Nullable="false" />
+          <Property Name="votes" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="candidates" Relationship="Self.candidates_lists_candidate_id_fkey" FromRole="candidates_lists" ToRole="candidates" />
+          <NavigationProperty Name="elections" Relationship="Self.candidates_lists_election_id_fkey" FromRole="candidates_lists" ToRole="elections" />
+        </EntityType>
+        <EntityType Name="comments">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="article_id" Type="Int32" Nullable="false" />
+          <Property Name="parent_comment_id" Type="Int32" />
+          <Property Name="comment_text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="publication_date" Type="DateTimeOffset" Precision="7" Nullable="false" />
+          <Property Name="rating" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="news" Relationship="Self.comments_article_id_fkey" FromRole="comments" ToRole="news" />
+          <NavigationProperty Name="comments1" Relationship="Self.comments_parent_comment_id_fkey" FromRole="comments" ToRole="comments1" />
+          <NavigationProperty Name="comments2" Relationship="Self.comments_parent_comment_id_fkey" FromRole="comments1" ToRole="comments" />
+        </EntityType>
+        <EntityType Name="election_types">
+          <Key>
+            <PropertyRef Name="type" />
+          </Key>
+          <Property Name="type" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="elections" Relationship="Self.elections_type_fkey" FromRole="election_types" ToRole="elections" />
+        </EntityType>
+        <EntityType Name="elections">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="type" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="start_time" Type="DateTimeOffset" Precision="7" Nullable="false" />
+          <Property Name="finish_time" Type="DateTimeOffset" Precision="7" />
+          <NavigationProperty Name="candidates_lists" Relationship="Self.candidates_lists_election_id_fkey" FromRole="elections" ToRole="candidates_lists" />
+          <NavigationProperty Name="election_types" Relationship="Self.elections_type_fkey" FromRole="elections" ToRole="election_types" />
+          <NavigationProperty Name="users" Relationship="Self.votes" FromRole="elections" ToRole="users" />
+        </EntityType>
+        <EntityType Name="messages">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="sender_id" Type="Int32" Nullable="false" />
+          <Property Name="recepient_id" Type="Int32" Nullable="false" />
+          <Property Name="message_text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="sending_time" Type="DateTimeOffset" Precision="7" Nullable="false" />
+          <NavigationProperty Name="users" Relationship="Self.messages_recepient_id_fkey" FromRole="messages" ToRole="users" />
+          <NavigationProperty Name="users1" Relationship="Self.messages_sender_id_fkey" FromRole="messages" ToRole="users" />
+        </EntityType>
+        <EntityType Name="news">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="headline" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="datetime" Type="DateTimeOffset" Precision="7" />
+          <NavigationProperty Name="comments" Relationship="Self.comments_article_id_fkey" FromRole="news" ToRole="comments" />
+        </EntityType>
+        <EntityType Name="parties">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="seats_in_parliament" Type="Int32" />
+          <NavigationProperty Name="candidates" Relationship="Self.candidates_party_fkey" FromRole="parties" ToRole="candidates" />
+          <NavigationProperty Name="supporters" Relationship="Self.supporters_party_id_fkey" FromRole="parties" ToRole="supporters" />
+        </EntityType>
+        <EntityType Name="supporters">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="surname" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="image_src" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="party_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="parties" Relationship="Self.supporters_party_id_fkey" FromRole="supporters" ToRole="parties" />
+        </EntityType>
+        <EntityType Name="user_roles">
+          <Key>
+            <PropertyRef Name="role" />
+          </Key>
+          <Property Name="role" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="users" Relationship="Self.users_role_fkey" FromRole="user_roles" ToRole="users" />
+        </EntityType>
+        <EntityType Name="users">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="surname" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="patronymic" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="birthday" Type="DateTime" Precision="0" />
+          <Property Name="email" Type="String" MaxLength="8000" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="passport_series" Type="String" MaxLength="4" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="passport_number" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="password_hash" Type="String" MaxLength="40" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="timezone" Type="Int32" Nullable="false" />
+          <Property Name="role" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="candidates" Relationship="Self.candidates_users__fk" FromRole="users" ToRole="candidates" />
+          <NavigationProperty Name="messages" Relationship="Self.messages_recepient_id_fkey" FromRole="users" ToRole="messages" />
+          <NavigationProperty Name="messages1" Relationship="Self.messages_sender_id_fkey" FromRole="users" ToRole="messages" />
+          <NavigationProperty Name="user_roles" Relationship="Self.users_role_fkey" FromRole="users" ToRole="user_roles" />
+          <NavigationProperty Name="cookies" Relationship="Self.cookies_user_id_fkey" FromRole="users" ToRole="cookies" />
+          <NavigationProperty Name="elections" Relationship="Self.votes" FromRole="users" ToRole="elections" />
+        </EntityType>
+        <EntityType Name="cookies">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="Int32" Nullable="false" />
+          <Property Name="value" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="users" Relationship="Self.cookies_user_id_fkey" FromRole="cookies" ToRole="users" />
+        </EntityType>
+        <Association Name="candidates_lists_candidate_id_fkey">
+          <End Role="candidates" Type="Self.candidates" Multiplicity="1" />
+          <End Role="candidates_lists" Type="Self.candidates_lists" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="candidates">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="candidates_lists">
+              <PropertyRef Name="candidate_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="candidates_party_fkey">
+          <End Role="parties" Type="Self.parties" Multiplicity="0..1" />
+          <End Role="candidates" Type="Self.candidates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="parties">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="candidates">
+              <PropertyRef Name="party" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="candidates_users__fk">
+          <End Role="users" Type="Self.users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="candidates" Type="Self.candidates" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="candidates">
+              <PropertyRef Name="agent_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="candidates_lists_election_id_fkey">
+          <End Role="elections" Type="Self.elections" Multiplicity="1" />
+          <End Role="candidates_lists" Type="Self.candidates_lists" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="elections">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="candidates_lists">
+              <PropertyRef Name="election_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="comments_article_id_fkey">
+          <End Role="news" Type="Self.news" Multiplicity="1" />
+          <End Role="comments" Type="Self.comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="news">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="comments">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="comments_parent_comment_id_fkey">
+          <End Role="comments" Type="Self.comments" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="comments1" Type="Self.comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="comments">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="comments1">
+              <PropertyRef Name="parent_comment_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="elections_type_fkey">
+          <End Role="election_types" Type="Self.election_types" Multiplicity="1" />
+          <End Role="elections" Type="Self.elections" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="election_types">
+              <PropertyRef Name="type" />
+            </Principal>
+            <Dependent Role="elections">
+              <PropertyRef Name="type" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="messages_recepient_id_fkey">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="messages" Type="Self.messages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="messages">
+              <PropertyRef Name="recepient_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="messages_sender_id_fkey">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="messages" Type="Self.messages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="messages">
+              <PropertyRef Name="sender_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="supporters_party_id_fkey">
+          <End Role="parties" Type="Self.parties" Multiplicity="1" />
+          <End Role="supporters" Type="Self.supporters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="parties">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="supporters">
+              <PropertyRef Name="party_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="users_role_fkey">
+          <End Role="user_roles" Type="Self.user_roles" Multiplicity="1" />
+          <End Role="users" Type="Self.users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="user_roles">
+              <PropertyRef Name="role" />
+            </Principal>
+            <Dependent Role="users">
+              <PropertyRef Name="role" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="cookies_user_id_fkey">
+          <End Role="users" Type="Self.users" Multiplicity="1" />
+          <End Role="cookies" Type="Self.cookies" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="cookies">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="votes">
+          <End Role="elections" Type="Self.elections" Multiplicity="*" />
+          <End Role="users" Type="Self.users" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="PoliticsDBContext" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="candidates" EntityType="Self.candidates" />
+          <EntitySet Name="candidates_lists" EntityType="Self.candidates_lists" />
+          <EntitySet Name="comments" EntityType="Self.comments" />
+          <EntitySet Name="election_types" EntityType="Self.election_types" />
+          <EntitySet Name="elections" EntityType="Self.elections" />
+          <EntitySet Name="messages" EntityType="Self.messages" />
+          <EntitySet Name="news" EntityType="Self.news" />
+          <EntitySet Name="parties" EntityType="Self.parties" />
+          <EntitySet Name="supporters" EntityType="Self.supporters" />
+          <EntitySet Name="user_roles" EntityType="Self.user_roles" />
+          <EntitySet Name="users" EntityType="Self.users" />
+          <EntitySet Name="cookies" EntityType="Self.cookies" />
+          <AssociationSet Name="candidates_lists_candidate_id_fkey" Association="Self.candidates_lists_candidate_id_fkey">
+            <End Role="candidates" EntitySet="candidates" />
+            <End Role="candidates_lists" EntitySet="candidates_lists" />
+          </AssociationSet>
+          <AssociationSet Name="candidates_party_fkey" Association="Self.candidates_party_fkey">
+            <End Role="parties" EntitySet="parties" />
+            <End Role="candidates" EntitySet="candidates" />
+          </AssociationSet>
+          <AssociationSet Name="candidates_users__fk" Association="Self.candidates_users__fk">
+            <End Role="users" EntitySet="users" />
+            <End Role="candidates" EntitySet="candidates" />
+          </AssociationSet>
+          <AssociationSet Name="candidates_lists_election_id_fkey" Association="Self.candidates_lists_election_id_fkey">
+            <End Role="elections" EntitySet="elections" />
+            <End Role="candidates_lists" EntitySet="candidates_lists" />
+          </AssociationSet>
+          <AssociationSet Name="comments_article_id_fkey" Association="Self.comments_article_id_fkey">
+            <End Role="news" EntitySet="news" />
+            <End Role="comments" EntitySet="comments" />
+          </AssociationSet>
+          <AssociationSet Name="comments_parent_comment_id_fkey" Association="Self.comments_parent_comment_id_fkey">
+            <End Role="comments" EntitySet="comments" />
+            <End Role="comments1" EntitySet="comments" />
+          </AssociationSet>
+          <AssociationSet Name="elections_type_fkey" Association="Self.elections_type_fkey">
+            <End Role="election_types" EntitySet="election_types" />
+            <End Role="elections" EntitySet="elections" />
+          </AssociationSet>
+          <AssociationSet Name="messages_recepient_id_fkey" Association="Self.messages_recepient_id_fkey">
+            <End Role="users" EntitySet="users" />
+            <End Role="messages" EntitySet="messages" />
+          </AssociationSet>
+          <AssociationSet Name="messages_sender_id_fkey" Association="Self.messages_sender_id_fkey">
+            <End Role="users" EntitySet="users" />
+            <End Role="messages" EntitySet="messages" />
+          </AssociationSet>
+          <AssociationSet Name="supporters_party_id_fkey" Association="Self.supporters_party_id_fkey">
+            <End Role="parties" EntitySet="parties" />
+            <End Role="supporters" EntitySet="supporters" />
+          </AssociationSet>
+          <AssociationSet Name="users_role_fkey" Association="Self.users_role_fkey">
+            <End Role="user_roles" EntitySet="user_roles" />
+            <End Role="users" EntitySet="users" />
+          </AssociationSet>
+          <AssociationSet Name="cookies_user_id_fkey" Association="Self.cookies_user_id_fkey">
+            <End Role="users" EntitySet="users" />
+            <End Role="cookies" EntitySet="cookies" />
+          </AssociationSet>
+          <AssociationSet Name="votes" Association="Self.votes">
+            <End Role="elections" EntitySet="elections" />
+            <End Role="users" EntitySet="users" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище modelpoliticsModelContainer" CdmEntityContainer="PoliticsDBContext">
+          <EntitySetMapping Name="candidates">
+            <EntityTypeMapping TypeName="Model.PoliticsModel.candidates">
+              <MappingFragment StoreEntitySet="candidates">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="party" ColumnName="party" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="info" ColumnName="info" />
+                <ScalarProperty Name="achievements" ColumnName="achievements" />
+                <ScalarProperty Name="election_program" ColumnName="election_program" />
+                <ScalarProperty Name="image_src" ColumnName="image_src" />
+                <ScalarProperty Name="agent_id" ColumnName="agent_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="candidates_lists">
+            <EntityTypeMapping TypeName="Model.PoliticsModel.candidates_lists">
+              <MappingFragment StoreEntitySet="candidates_lists">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="election_id" ColumnName="election_id" />
+                <ScalarProperty Name="candidate_id" ColumnName="candidate_id" />
+                <ScalarProperty Name="votes" ColumnName="votes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="comments">
+            <EntityTypeMapping TypeName="Model.PoliticsModel.comments">
+              <MappingFragment StoreEntitySet="comments">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="article_id" ColumnName="article_id" />
+                <ScalarProperty Name="parent_comment_id" ColumnName="parent_comment_id" />
+                <ScalarProperty Name="comment_text" ColumnName="comment_text" />
+                <ScalarProperty Name="publication_date" ColumnName="publication_date" />
+                <ScalarProperty Name="rating" ColumnName="rating" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="election_types">
+            <EntityTypeMapping TypeName="Model.PoliticsModel.election_types">
+              <MappingFragment StoreEntitySet="election_types">
+                <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="elections">
+            <EntityTypeMapping TypeName="Model.PoliticsModel.elections">
+              <MappingFragment StoreEntitySet="elections">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="start_time" ColumnName="start_time" />
+                <ScalarProperty Name="finish_time" ColumnName="finish_time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="messages">
+            <EntityTypeMapping TypeName="Model.PoliticsModel.messages">
+              <MappingFragment StoreEntitySet="messages">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="sender_id" ColumnName="sender_id" />
+                <ScalarProperty Name="recepient_id" ColumnName="recepient_id" />
+                <ScalarProperty Name="message_text" ColumnName="message_text" />
+                <ScalarProperty Name="sending_time" ColumnName="sending_time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="news">
+            <EntityTypeMapping TypeName="Model.PoliticsModel.news">
+              <MappingFragment StoreEntitySet="news">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="headline" ColumnName="headline" />
+                <ScalarProperty Name="content" ColumnName="content" />
+                <ScalarProperty Name="datetime" ColumnName="datetime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="parties">
+            <EntityTypeMapping TypeName="Model.PoliticsModel.parties">
+              <MappingFragment StoreEntitySet="parties">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="seats_in_parliament" ColumnName="seats_in_parliament" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="supporters">
+            <EntityTypeMapping TypeName="Model.PoliticsModel.supporters">
+              <MappingFragment StoreEntitySet="supporters">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="surname" ColumnName="surname" />
+                <ScalarProperty Name="image_src" ColumnName="image_src" />
+                <ScalarProperty Name="party_id" ColumnName="party_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="user_roles">
+            <EntityTypeMapping TypeName="Model.PoliticsModel.user_roles">
+              <MappingFragment StoreEntitySet="user_roles">
+                <ScalarProperty Name="role" ColumnName="role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="users">
+            <EntityTypeMapping TypeName="Model.PoliticsModel.users">
+              <MappingFragment StoreEntitySet="users">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="surname" ColumnName="surname" />
+                <ScalarProperty Name="patronymic" ColumnName="patronymic" />
+                <ScalarProperty Name="birthday" ColumnName="birthday" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="passport_series" ColumnName="passport_series" />
+                <ScalarProperty Name="passport_number" ColumnName="passport_number" />
+                <ScalarProperty Name="password_hash" ColumnName="password_hash" />
+                <ScalarProperty Name="timezone" ColumnName="timezone" />
+                <ScalarProperty Name="role" ColumnName="role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cookies">
+            <EntityTypeMapping TypeName="Model.PoliticsModel.cookies">
+              <MappingFragment StoreEntitySet="cookies">
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="value" ColumnName="value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="votes" TypeName="Model.PoliticsModel.votes" StoreEntitySet="votes">
+            <EndProperty Name="elections">
+              <ScalarProperty Name="id" ColumnName="election_id" />
+            </EndProperty>
+            <EndProperty Name="users">
+              <ScalarProperty Name="id" ColumnName="user_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
