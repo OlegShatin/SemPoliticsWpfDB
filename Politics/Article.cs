@@ -12,14 +12,20 @@ namespace Politics
     using System;
     using System.Collections.Generic;
     
-    public partial class supporters
+    public partial class Article
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public string surname { get; set; }
-        public string image_src { get; set; }
-        public int party_id { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Article()
+        {
+            this.Comments = new HashSet<Comment>();
+        }
     
-        public virtual parties parties { get; set; }
+        public int Id { get; set; }
+        public string Headline { get; set; }
+        public string Content { get; set; }
+        public Nullable<System.DateTimeOffset> SendingTime { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }

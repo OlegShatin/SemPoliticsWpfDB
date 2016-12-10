@@ -12,20 +12,11 @@ namespace Politics
     using System;
     using System.Collections.Generic;
     
-    public partial class news
+    public partial class UserCookie
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public news()
-        {
-            this.comments = new HashSet<comments>();
-        }
+        public int UserId { get; set; }
+        public string Value { get; set; }
     
-        public int id { get; set; }
-        public string headline { get; set; }
-        public string content { get; set; }
-        public Nullable<System.DateTimeOffset> datetime { get; set; }
-    
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<comments> comments { get; set; }
+        public virtual User User { get; set; }
     }
 }

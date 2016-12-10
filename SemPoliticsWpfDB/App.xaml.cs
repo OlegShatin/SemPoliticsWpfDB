@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Politics;
+using SemPoliticsWpfDB.Views;
 
 namespace SemPoliticsWpfDB
 {
@@ -18,12 +19,15 @@ namespace SemPoliticsWpfDB
         {
            using (var db = new PoliticsDBContext())
             {
-                var agents = db.users.Where(x => x.timezone > 3);
-                foreach (users agent in agents)
+                var agents = db.Users.Where(x => x.Email.Contains("agent"));
+                foreach (User agent in agents)
                 {
-                    Console.WriteLine(agent.name);
+                    Console.WriteLine(agent.Name);
                 }
-                Console.Read();
+                MainWindow w = new MainWindow();
+                w.Show();
+                
+                Console.ReadLine();
             }
 
         }

@@ -61,31 +61,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="candidates.cs">
+    <Compile Include="Article.cs">
       <DependentUpon>PoliticsDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="candidates_lists.cs">
+    <Compile Include="Candidate.cs">
       <DependentUpon>PoliticsDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="comments.cs">
+    <Compile Include="CandidateOnElection.cs">
       <DependentUpon>PoliticsDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="cookies.cs">
+    <Compile Include="Comment.cs">
       <DependentUpon>PoliticsDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="elections.cs">
+    <Compile Include="Election.cs">
       <DependentUpon>PoliticsDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="election_types.cs">
+    <Compile Include="ElectionType.cs">
       <DependentUpon>PoliticsDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="messages.cs">
+    <Compile Include="Message.cs">
       <DependentUpon>PoliticsDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="news.cs">
-      <DependentUpon>PoliticsDBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="parties.cs">
+    <Compile Include="Party.cs">
       <DependentUpon>PoliticsDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="PoliticsDBModel.Context.cs">
@@ -104,13 +101,16 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="supporters.cs">
+    <Compile Include="Supporter.cs">
       <DependentUpon>PoliticsDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="users.cs">
+    <Compile Include="User.cs">
       <DependentUpon>PoliticsDBModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="user_roles.cs">
+    <Compile Include="UserCookie.cs">
+      <DependentUpon>PoliticsDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserRole.cs">
       <DependentUpon>PoliticsDBModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>

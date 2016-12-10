@@ -12,25 +12,17 @@ namespace Politics
     using System;
     using System.Collections.Generic;
     
-    public partial class comments
+    public partial class ElectionType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public comments()
+        public ElectionType()
         {
-            this.comments1 = new HashSet<comments>();
+            this.Elections = new HashSet<Election>();
         }
     
-        public int id { get; set; }
-        public int user_id { get; set; }
-        public int article_id { get; set; }
-        public Nullable<int> parent_comment_id { get; set; }
-        public string comment_text { get; set; }
-        public System.DateTimeOffset publication_date { get; set; }
-        public int rating { get; set; }
+        public string Type { get; set; }
     
-        public virtual news news { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<comments> comments1 { get; set; }
-        public virtual comments comments2 { get; set; }
+        public virtual ICollection<Election> Elections { get; set; }
     }
 }

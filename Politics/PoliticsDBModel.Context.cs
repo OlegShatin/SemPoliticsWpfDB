@@ -25,17 +25,17 @@ namespace Politics
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<candidates> candidates { get; set; }
-        public virtual DbSet<candidates_lists> candidates_lists { get; set; }
-        public virtual DbSet<comments> comments { get; set; }
-        public virtual DbSet<election_types> election_types { get; set; }
-        public virtual DbSet<elections> elections { get; set; }
-        public virtual DbSet<messages> messages { get; set; }
-        public virtual DbSet<news> news { get; set; }
-        public virtual DbSet<parties> parties { get; set; }
-        public virtual DbSet<supporters> supporters { get; set; }
-        public virtual DbSet<user_roles> user_roles { get; set; }
-        public virtual DbSet<users> users { get; set; }
-        public virtual DbSet<cookies> cookies { get; set; }
+        public virtual DbSet<Candidate> Candidates { get; set; }
+        public virtual DbSet<CandidateOnElection> CandidatesList { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<ElectionType> ElectionTypes { get; set; }
+        public virtual DbSet<Election> Elections { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<Article> Articles { get; set; }
+        public virtual DbSet<Party> Parties { get; set; }
+        public virtual DbSet<Supporter> Supporters { get; set; }
+        public virtual DbSet<UserRole> UserRoles { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserCookie> UserCookies { get; set; }
     }
 }

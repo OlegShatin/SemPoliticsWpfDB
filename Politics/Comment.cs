@@ -12,21 +12,25 @@ namespace Politics
     using System;
     using System.Collections.Generic;
     
-    public partial class parties
+    public partial class Comment
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public parties()
+        public Comment()
         {
-            this.candidates = new HashSet<candidates>();
-            this.supporters = new HashSet<supporters>();
+            this.ChildrenComments = new HashSet<Comment>();
         }
     
-        public int id { get; set; }
-        public Nullable<int> seats_in_parliament { get; set; }
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public int ArticleId { get; set; }
+        public Nullable<int> ParentCommentId { get; set; }
+        public string Text { get; set; }
+        public System.DateTimeOffset SendingTime { get; set; }
+        public int Rating { get; set; }
     
+        public virtual Article Article { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<candidates> candidates { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<supporters> supporters { get; set; }
+        public virtual ICollection<Comment> ChildrenComments { get; set; }
+        public virtual Comment ParentComment { get; set; }
     }
 }

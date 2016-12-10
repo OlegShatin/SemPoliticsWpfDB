@@ -12,14 +12,15 @@ namespace Politics
     using System;
     using System.Collections.Generic;
     
-    public partial class candidates_lists
+    public partial class Message
     {
-        public int id { get; set; }
-        public int election_id { get; set; }
-        public int candidate_id { get; set; }
-        public int votes { get; set; }
+        public int Id { get; set; }
+        public int SenderId { get; set; }
+        public int RecepientId { get; set; }
+        public string Text { get; set; }
+        public System.DateTimeOffset SendingTime { get; set; }
     
-        public virtual candidates candidates { get; set; }
-        public virtual elections elections { get; set; }
+        public virtual User Recepient { get; set; }
+        public virtual User Sender { get; set; }
     }
 }

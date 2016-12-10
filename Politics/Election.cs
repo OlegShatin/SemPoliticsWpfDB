@@ -12,26 +12,24 @@ namespace Politics
     using System;
     using System.Collections.Generic;
     
-    public partial class candidates
+    public partial class Election
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public candidates()
+        public Election()
         {
-            this.candidates_lists = new HashSet<candidates_lists>();
+            this.CandidatesList = new HashSet<CandidateOnElection>();
+            this.VotedUsers = new HashSet<User>();
         }
     
-        public int id { get; set; }
-        public Nullable<int> party { get; set; }
-        public string name { get; set; }
-        public string info { get; set; }
-        public string achievements { get; set; }
-        public string election_program { get; set; }
-        public string image_src { get; set; }
-        public int agent_id { get; set; }
+        public int Id { get; set; }
+        public string TypeName { get; set; }
+        public System.DateTimeOffset StartTime { get; set; }
+        public Nullable<System.DateTimeOffset> FinishTime { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<candidates_lists> candidates_lists { get; set; }
-        public virtual parties parties { get; set; }
-        public virtual users users { get; set; }
+        public virtual ICollection<CandidateOnElection> CandidatesList { get; set; }
+        public virtual ElectionType ElectionType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<User> VotedUsers { get; set; }
     }
 }

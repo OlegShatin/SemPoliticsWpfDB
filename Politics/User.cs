@@ -12,38 +12,38 @@ namespace Politics
     using System;
     using System.Collections.Generic;
     
-    public partial class users
+    public partial class User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public users()
+        public User()
         {
-            this.candidates = new HashSet<candidates>();
-            this.messages = new HashSet<messages>();
-            this.messages1 = new HashSet<messages>();
-            this.elections = new HashSet<elections>();
+            this.Candidate = new HashSet<Candidate>();
+            this.RecepiedMessages = new HashSet<Message>();
+            this.SendedMessages = new HashSet<Message>();
+            this.VotedElections = new HashSet<Election>();
         }
     
-        public int id { get; set; }
-        public string name { get; set; }
-        public string surname { get; set; }
-        public string patronymic { get; set; }
-        public Nullable<System.DateTime> birthday { get; set; }
-        public string email { get; set; }
-        public string passport_series { get; set; }
-        public string passport_number { get; set; }
-        public string password_hash { get; set; }
-        public int timezone { get; set; }
-        public string role { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Patronymic { get; set; }
+        public Nullable<System.DateTime> Birthday { get; set; }
+        public string Email { get; set; }
+        public string PassportSeries { get; set; }
+        public string PassportNumber { get; set; }
+        public string PasswordHash { get; set; }
+        public int Timezone { get; set; }
+        public string RoleName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<candidates> candidates { get; set; }
+        public virtual ICollection<Candidate> Candidate { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<messages> messages { get; set; }
+        public virtual ICollection<Message> RecepiedMessages { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<messages> messages1 { get; set; }
-        public virtual user_roles user_roles { get; set; }
-        public virtual cookies cookies { get; set; }
+        public virtual ICollection<Message> SendedMessages { get; set; }
+        public virtual UserRole Role { get; set; }
+        public virtual UserCookie Cookies { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<elections> elections { get; set; }
+        public virtual ICollection<Election> VotedElections { get; set; }
     }
 }

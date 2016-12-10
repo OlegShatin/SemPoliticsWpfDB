@@ -12,11 +12,14 @@ namespace Politics
     using System;
     using System.Collections.Generic;
     
-    public partial class cookies
+    public partial class Supporter
     {
-        public int user_id { get; set; }
-        public string value { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string ImageSrc { get; set; }
+        public int PartyId { get; set; }
     
-        public virtual users users { get; set; }
+        public virtual Party Party { get; set; }
     }
 }

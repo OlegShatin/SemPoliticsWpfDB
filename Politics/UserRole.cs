@@ -12,17 +12,17 @@ namespace Politics
     using System;
     using System.Collections.Generic;
     
-    public partial class election_types
+    public partial class UserRole
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public election_types()
+        public UserRole()
         {
-            this.elections = new HashSet<elections>();
+            this.Users = new HashSet<User>();
         }
     
-        public string type { get; set; }
+        public string Role { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<elections> elections { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }
