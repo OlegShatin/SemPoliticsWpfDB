@@ -24,5 +24,6 @@ namespace SemPoliticsWpfDB.Views
         {
             InitializeComponent();
         }
+
     }
 }

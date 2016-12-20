@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using Politics;
 using SemPoliticsWpfDB.Views;
+using SemPoliticsWpfDB.ViewModels;
 
 namespace SemPoliticsWpfDB
 {
@@ -25,11 +26,28 @@ namespace SemPoliticsWpfDB
                     Console.WriteLine(agent.Name);
                 }
                 MainWindow w = new MainWindow();
+
+                Root root = new Root();
+                w.DataContext = root;
                 w.Show();
                 
                 Console.ReadLine();
             }
 
+        }
+        class Root
+        {
+            
+            public List<ElectionViewModel> PastElectionsList { get; set; }
+            public Root()
+            {
+                PastElectionsList = new List<ElectionViewModel>();
+                PoliticsDBContext context = new PoliticsDBContext();
+                foreach (var election in context.Elections)
+                {
+                    PastElectionsList.Add(new ElectionViewModel(election, context));
+                }
+            }
         }
     }
 }
