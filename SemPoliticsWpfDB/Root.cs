@@ -17,15 +17,17 @@ namespace SemPoliticsWpfDB
         {
             ElectionsList = new ObservableCollection<ElectionViewModel>();
             context = new PoliticsDBContext();
-            foreach (var election in context.Elections)
-            {
-                ElectionsList.Add(new ElectionViewModel(election, context));
-            }
             ElectionViewModel.AllCandidatesList = new ObservableCollection<CandidateViewModel>();
             foreach (var candidate in context.Candidates)
             {
                 ElectionViewModel.AllCandidatesList.Add(new CandidateViewModel(candidate, context));
             }
+
+            foreach (var election in context.Elections)
+            {
+                ElectionsList.Add(new ElectionViewModel(election, context));
+            }           
+            
         }
 
         private DelegateCommand _saveChangesCommand;

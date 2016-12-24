@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace SemPoliticsWpfDB.ViewModels
 {
-    class ElectionViewModel : BaseViewModel
+    class ElectionViewModel : BaseViewModel, IEquatable<ElectionViewModel>
     {
         static ElectionViewModel()
         {
@@ -111,24 +111,73 @@ namespace SemPoliticsWpfDB.ViewModels
             private set { }
         }
         public ObservableCollection<CandidateViewModel> CurrentElectionCandidatesList { get; set; }
-
+        
         private DelegateCommand _showCandidatesCommand;
         public ICommand ShowCandidates => _showCandidatesCommand ?? (_showCandidatesCommand = new DelegateCommand(ShowCandidatesMethod));
         private void ShowCandidatesMethod()
         {
-            CurrentElectionCandidatesList = new ObservableCollection<CandidateViewModel>();
-            foreach (var candidateOnThisEleciton in from candidateItem in _dbcontext.CandidatesList
-                                                    where candidateItem.ElectionId == Election.Id
-                                                    join candidate in _dbcontext.Candidates
-                                                    on candidateItem.CandidateId equals candidate.Id
-                                                    select candidate)
+            if (CurrentElectionCandidatesList == null)
             {
-                CurrentElectionCandidatesList.Add(new CandidateViewModel(candidateOnThisEleciton, _dbcontext));
-            }
+                CurrentElectionCandidatesList = new ObservableCollection<CandidateViewModel>();
+                foreach (var candidateOnThisEleciton in from candidateItem in _dbcontext.CandidatesList
+                                                        where candidateItem.ElectionId == Election.Id
+                                                        join candidate in _dbcontext.Candidates
+                                                        on candidateItem.CandidateId equals candidate.Id
+                                                        select candidate)
+                {
+                    CurrentElectionCandidatesList.Add(new CandidateViewModel(candidateOnThisEleciton, _dbcontext));
+                }
+            }            
             CandidatesOnElectionWindow w = new CandidatesOnElectionWindow();
             w.DataContext = this;
             w.Show();
         }
+
+        //add to candiates list from AllCandidates command
+        private DelegateCommand<object> _addCandidatesToElectionCommand;
+        public ICommand AddCandidatesToElection => _addCandidatesToElectionCommand ??
+            (_addCandidatesToElectionCommand = new DelegateCommand<object>(AddCandidatesToElectionCommandMethod));
+        private void AddCandidatesToElectionCommandMethod(object toAddCandidatesRaw)
+        {
+            System.Collections.IList items = (System.Collections.IList)toAddCandidatesRaw;
+            foreach (var candidate in items.Cast<CandidateViewModel>())
+            {
+                CandidateOnElection candidateItem = new CandidateOnElection();
+                candidateItem.Candidate = candidate.Candidate;
+                candidateItem.Election = Election;
+                candidateItem.VotesForCandidate = 0;
+                candidateItem.CandidateId = candidate.Candidate.Id;
+                candidateItem.ElectionId = Election.Id;
+                Election.CandidatesList.Add(candidateItem);
+                candidate.Candidate.ElectionsResults.Add(candidateItem);
+                _dbcontext.CandidatesList.Add(candidateItem);
+                CurrentElectionCandidatesList.Add(candidate);
+            }
+            OnPropertyChanged("AllCurrentTypeCandidatesList");
+            OnPropertyChanged("CurrentElectionCandidatesList");
+        }
+        //remove candiates list from AllCandidates command
+        private DelegateCommand<object> _removeCandidatesFromElectionCommand;
+        public ICommand RemoveCandidatesFromElection => _removeCandidatesFromElectionCommand ??
+            (_removeCandidatesFromElectionCommand = new DelegateCommand<object>(removeCandidatesFromElectionCommandMethod));
+        private void removeCandidatesFromElectionCommandMethod(object toRemoveCandidatesRaw)
+        {
+            System.Collections.IList items = (System.Collections.IList)toRemoveCandidatesRaw;
+            var buffer = new List<CandidateViewModel>();
+            foreach (var candidate in items.Cast<CandidateViewModel>())
+            {
+                buffer.Add(candidate);
+            }
+            foreach (var candidate in buffer)
+            {
+                //todo: write delete process
+                //_dbcontext.CandidatesList.Remove(_dbcontext.CandidatesList.Where(x => x.CandidateId == candidate.Candidate.Id && x.Election.Id == Election.Id).FirstOrDefault());                
+                CurrentElectionCandidatesList.Remove(candidate);
+            }
+            OnPropertyChanged("AllCurrentTypeCandidatesList");
+            OnPropertyChanged("CurrentElectionCandidatesList");
+        }
+
 
         public bool Equals(ElectionViewModel other)
         {

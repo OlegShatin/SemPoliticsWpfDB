@@ -7,7 +7,7 @@ using Politics;
 
 namespace SemPoliticsWpfDB.ViewModels
 {
-    class CandidateViewModel : BaseViewModel
+    class CandidateViewModel : BaseViewModel,IEquatable<CandidateViewModel>
     {
         public Candidate Candidate { get; set; }
         private PoliticsDBContext _dbcontext;
