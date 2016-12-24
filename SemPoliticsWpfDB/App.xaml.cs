@@ -25,8 +25,7 @@ namespace SemPoliticsWpfDB
 
                 Root root = new Root();
                 w.DataContext = root;
-                w.Show();
-                MessageBox.Show(w, "SomeText", "Caption", MessageBoxButton.OK);
+                w.Show();                
                 Console.ReadLine();
             }
 

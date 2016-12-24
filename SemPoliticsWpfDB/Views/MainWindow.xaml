@@ -11,7 +11,7 @@
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="536" Margin="10,23,0,0" VerticalAlignment="Top" Width="972">
             <TabItem Header="Выборы" Margin="0,0,-4,-2">
                 <Grid Background="#FFE5E5E5"  Margin="10,4,11,51">
-                    <ListView x:Name="PastElections" ItemsSource="{Binding ElectionsList, Mode=TwoWay}" Height="392" Margin="10,43,10,0" VerticalAlignment="Top">
+                    <ListView x:Name="Elections" ItemsSource="{Binding ElectionsList, Mode=TwoWay}" Height="392" Margin="10,43,10,0" VerticalAlignment="Top">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Выборы">
@@ -42,6 +42,13 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
+                                <GridViewColumn Header="Голосов отдано">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Votes, UpdateSourceTrigger=PropertyChanged}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn>
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
@@ -65,6 +72,14 @@
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Click">
                                 <i:InvokeCommandAction Command="{Binding AddElection}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                    <Button x:Name="removeElectionsButton" Content="-" HorizontalAlignment="Left" Margin="35,18,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction Command="{Binding RemoveElections}"
+                                           CommandParameter="{Binding SelectedItems, ElementName=Elections}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </Button>

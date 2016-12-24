@@ -77,14 +77,21 @@
                     <GridViewColumn Header="Изображение">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox x:Name="cb" Text="{Binding ImageSrc, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                <TextBox Text="{Binding ImageSrc, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Голоса">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Votes, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
             <ListView.ItemTemplate>
-                <DataTemplate DataType="viewModels:CandidateViewModel"/>
+                <DataTemplate DataType="viewModels:CandidateOnElectionViewModel"/>
             </ListView.ItemTemplate>
         </ListView>
     </Grid>
