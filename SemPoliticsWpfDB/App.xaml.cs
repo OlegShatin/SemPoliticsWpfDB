@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using Politics;
 using SemPoliticsWpfDB.Views;
+using SemPoliticsWpfDB.ViewModels;
 
 namespace SemPoliticsWpfDB
 {

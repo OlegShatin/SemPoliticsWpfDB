@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Politics;
-using SemPoliticsWpfDB.ViewModels;
 using SemPoliticsWpfDB.Commands;
 using System.Windows.Input;
 using System.Data.Entity.Infrastructure;
@@ -9,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Windows;
 
-namespace SemPoliticsWpfDB
+namespace SemPoliticsWpfDB.ViewModels
 {
     class Root : BaseViewModel
     {
@@ -20,7 +19,6 @@ namespace SemPoliticsWpfDB
             ElectionsList = new ObservableCollection<ElectionViewModel>();
             context = new PoliticsDBContext();
             ElectionViewModel.AllCandidatesList = new ObservableCollection<CandidateViewModel>();
-                     
             foreach (var candidate in context.Candidates.ToList())
             {
                 ElectionViewModel.AllCandidatesList.Add(new CandidateViewModel(candidate, context));
@@ -30,8 +28,14 @@ namespace SemPoliticsWpfDB
             foreach (var election in context.Elections)
             {
                 ElectionsList.Add(new ElectionViewModel(election, context));
-            }           
-            
+            }
+
+            VotersVMList = new ObservableCollection<UserViewModel>();
+            foreach (var voter in context.Users.Where(x => x.RoleName.Equals("USER")).ToList())
+            {
+                VotersVMList.Add(new UserViewModel(voter, context));
+            }
+
         }
 
         private DelegateCommand _saveChangesCommand;
@@ -114,6 +118,58 @@ namespace SemPoliticsWpfDB
                     "Предупреждение", MessageBoxButton.OK);
             }
         }
+
+        //users tab
+        public UserViewModel AdminVM { get; set; }
+        public ObservableCollection<UserViewModel> VotersVMList { get; set; }
+        public ObservableCollection<UserViewModel> AgentsVMList { get; set; }
+
+        //add new Voter button
+        private DelegateCommand _addVoterCommand;
+        public ICommand AddVoter => _addVoterCommand ?? (_addVoterCommand = new DelegateCommand(AddVoterMethod));
+        private DelegateCommand _addAgentCommand;
+        public ICommand AddAgent => _addAgentCommand ?? (_addAgentCommand = new DelegateCommand(AddAgentMethod));
+        private void AddVoterMethod()
+        {
+            VotersVMList.Add(new UserViewModel(AddUser("USER"), context));
+            OnPropertyChanged("VotersVMList");
+        }
+        private void AddAgentMethod()
+        {
+            VotersVMList.Add(new UserViewModel(AddUser("AGENT"), context));
+            OnPropertyChanged("VotersVMList");
+        }
+        private int _newUsersCounter = 0;
+        private User AddUser(string role)
+        {
+            _newUsersCounter++;
+            User newUser = new User()
+            {
+                Name = "newUser_" + _newUsersCounter,
+                Surname = "newUser_" + _newUsersCounter,
+                Patronymic = "newUser_" + _newUsersCounter,
+                PassportNumber = "000000",
+                PassportSeries = "0000",
+                //password: 1234
+                PasswordHash = Hash("1234"),
+                Email = "new" + role + "_" + _newUsersCounter + "@example.com",
+                RoleName = role,
+                Role = context.UserRoles.Where(x => x.Role.Equals(role)).FirstOrDefault(),
+                Timezone = 3,
+                Birthday = new DateTime(1970, 1, 1)
+
+            };
+            context.Users.Add(newUser);
+            return newUser;
+
+            
+        }
+        public static string Hash(string input)
+        {
+            return string.Join("", (new System.Security.Cryptography.SHA1Managed().ComputeHash(System.Text.Encoding.UTF8.GetBytes(input))).Select(x => x.ToString("x2")).ToArray());
+        }
+
+
     }
 }
 

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace SemPoliticsWpfDB.ViewModels
@@ -76,11 +77,32 @@ namespace SemPoliticsWpfDB.ViewModels
         private void ChangeTypeMethod(string newType)
         {
             Election.TypeName = newType;
+            OnPropertyChanged("Type");
         }
         private bool CanChangeType(string s)
         {
-            //todo: 
-            return true;
+            if (s != null && s.Equals(Type))
+            {
+                return true;
+            }
+            if (!(CurrentElectionCandidatesList.Count > 2))
+            {
+                foreach (var candidateVM in CurrentElectionCandidatesList)
+                {
+                    if (!(candidateVM.Candidate.Name.Equals("Испортить бюллетень") || candidateVM.Candidate.Name.Equals("Пустой бюллетень")))
+                    {
+                        MessageBox.Show("Снимите всех не универсальных кандидатов с этих выборов перед изменением типа выборов",
+                    "Предупреждение", MessageBoxButton.OK);
+                        OnPropertyChanged("Type");
+                        return false;
+                    }
+                }
+                return true;
+            }
+            MessageBox.Show("Снимите всех не универсальных кандидатов с этих выборов перед изменением типа выборов",
+                    "Предупреждение", MessageBoxButton.OK);
+            OnPropertyChanged("Type");
+            return false;
         }
 
         //show candidates list command
@@ -102,7 +124,8 @@ namespace SemPoliticsWpfDB.ViewModels
                 }
                 else
                 {
-                    foreach (var candidate in AllCandidatesList.Where(x => (x.Candidate.PartyId == null || x.Candidate.Name.Equals("Испортить бюллетень") || x.Candidate.Name.Equals("Пустой бюллетень")) && !CurrentElectionCandidatesList.Contains(x)))
+                    foreach (var candidate in AllCandidatesList.Where(x => (x.Candidate.PartyId == null 
+                    || x.Candidate.Name.Equals("Испортить бюллетень") || x.Candidate.Name.Equals("Пустой бюллетень")) && !CurrentElectionCandidatesList.Contains(x)))
                     {
                         result.Add(candidate);
                     }

@@ -7,9 +7,17 @@
         xmlns:local="clr-namespace:SemPoliticsWpfDB"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="1000">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+                   Source="/Views/Styles/EditableLabelStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
-        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="536" Margin="10,23,0,0" VerticalAlignment="Top" Width="972">
-            <TabItem Header="Выборы" Margin="0,0,-4,-2">
+        <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="536" Margin="10,23,0,0" VerticalAlignment="Top" Width="972" >
+            <TabItem Header="Выборы">
                 <Grid Background="#FFE5E5E5"  Margin="10,4,11,51">
                     <ListView x:Name="Elections" ItemsSource="{Binding ElectionsList, Mode=TwoWay}" Height="392" Margin="10,43,10,0" VerticalAlignment="Top">
                         <ListView.View>
@@ -24,10 +32,10 @@
                                 <GridViewColumn Header="Тип">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <ComboBox x:Name="cb" ItemsSource="{Binding Types, UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding Type}">
+                                            <ComboBox x:Name="cb" ItemsSource="{Binding Types, UpdateSourceTrigger=PropertyChanged}" SelectedValue="{Binding Type, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}">
                                                 <i:Interaction.Triggers>
                                                     <i:EventTrigger EventName="SelectionChanged">
-                                                        <i:InvokeCommandAction Command="{Binding ChangeType, UpdateSourceTrigger=PropertyChanged}" 
+                                                        <i:InvokeCommandAction Command="{Binding ChangeType}" 
                                 CommandParameter="{Binding SelectedItem, ElementName=cb}" />
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
@@ -84,6 +92,67 @@
                         </i:Interaction.Triggers>
                     </Button>
                 </Grid>
+            </TabItem>
+            <TabItem Header="Пользователи">
+                <TabControl x:Name ="UsersTabControl">
+                    <TabItem Header="Голосующие">
+                        <Grid Background="#FFE5E5E5"  Margin="10,4,11,51">
+                            <ListView x:Name="VotersList" ItemsSource="{Binding VotersVMList,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="392" Margin="10,43,10,0" VerticalAlignment="Top">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Имя" Width="100">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Style="{StaticResource EditableLabelStyle}" Content="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Label>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Фамилия" Width="100">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Style="{StaticResource EditableLabelStyle}" Content="{Binding Surname, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Label>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Отчество" Width="100">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Style="{StaticResource EditableLabelStyle}" Content="{Binding Patronymic, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Label>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Хеш-пароль" Width="100">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Style="{StaticResource EditableLabelStyle}" Content="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Label>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate DataType="viewModels:UserViewModel"/>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <Button x:Name="addVoterButton" Content="+" HorizontalAlignment="Left" Margin="10,18,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding AddVoter}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                            <Button x:Name="removeVoterButton" Content="-" HorizontalAlignment="Left" Margin="35,18,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding RemoveVoter}"
+                                           CommandParameter="{Binding SelectedItems, ElementName=VotersList}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                        </Grid>
+                    </TabItem>
+                    <TabItem Header="Агенты кандидатов"></TabItem>
+                </TabControl>
             </TabItem>
         </TabControl>
         <Button x:Name="saveChangesButton" Content="Сохранить изменения" HorizontalAlignment="Left" Margin="825,23,0,0" VerticalAlignment="Top" Width="140">
