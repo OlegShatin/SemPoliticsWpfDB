@@ -4,7 +4,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SemPoliticsWpfDB"
+        xmlns:local="clr-namespace:SemPoliticsWpfDB"        
+        xmlns:v="clr-namespace:SemPoliticsWpfDB.Views.Scripts"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="1000">
     <Window.Resources>
@@ -18,8 +19,8 @@
     <Grid>
         <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="536" Margin="10,23,0,0" VerticalAlignment="Top" Width="972" >
             <TabItem Header="Выборы">
-                <Grid Background="#FFE5E5E5"  Margin="10,4,11,51">
-                    <ListView x:Name="Elections" ItemsSource="{Binding ElectionsList, Mode=TwoWay}" Height="392" Margin="10,43,10,0" VerticalAlignment="Top">
+                <Grid Background="#FFE5E5E5"  Margin="10,4,11,11">
+                    <ListView x:Name="Elections" ItemsSource="{Binding ElectionsList, Mode=TwoWay}" Margin="10,43,10,18">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Выборы">
@@ -96,8 +97,8 @@
             <TabItem Header="Пользователи">
                 <TabControl x:Name ="UsersTabControl">
                     <TabItem Header="Голосующие">
-                        <Grid Background="#FFE5E5E5"  Margin="10,4,11,51">
-                            <ListView x:Name="VotersList" ItemsSource="{Binding VotersVMList,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Height="392" Margin="10,43,10,0" VerticalAlignment="Top">
+                        <Grid Background="#FFE5E5E5"  Margin="10,4,11,11">
+                            <ListView x:Name="VotersList" ItemsSource="{Binding VotersVMList,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="10,43,10,10">
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn Header="Имя" Width="100">
@@ -121,10 +122,51 @@
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
-                                        <GridViewColumn Header="Хеш-пароль" Width="100">
+                                        <GridViewColumn Header="Хеш-пароль (пароль -> хэш)" Width="170">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <Label Style="{StaticResource EditableLabelStyle}" Content="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Label>
+                                                    <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Width="155">
+                                                        <i:Interaction.Triggers>
+                                                            <i:EventTrigger EventName="TextChanged">
+                                                                <i:InvokeCommandAction Command="{Binding ChangePasswordText}" CommandParameter="{Binding Text, ElementName=PassTB}"/>
+                                                            </i:EventTrigger>
+                                                            <i:EventTrigger EventName="LostFocus">
+                                                                <i:InvokeCommandAction Command="{Binding ChangePassword}"/>
+                                                            </i:EventTrigger>
+                                                        </i:Interaction.Triggers>
+                                                    </TextBox>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Email" Width="120">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Style="{StaticResource EditableLabelStyle}" Content="{Binding Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="105"></Label>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Номер паспорта" Width="70">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Style="{StaticResource EditableLabelStyle}" Content="{Binding PassNum, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="105"></Label>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Серия паспорта" Width="60">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Style="{StaticResource EditableLabelStyle}" Content="{Binding PassSer, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="105"></Label>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Временная зона по UTC" Width="40">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox MaxLength="3" TextWrapping="Wrap" MaxWidth="150" Margin="4" Text="{Binding Timezone, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="30">
+                                                        <i:Interaction.Behaviors>
+                                                            <v:AllowableCharactersTextBoxBehavior RegularExpression="^[0-9.\-]+$" MaxLength="3" />
+                                                        </i:Interaction.Behaviors>
+                                                    </TextBox>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
@@ -144,7 +186,7 @@
                             <Button x:Name="removeVoterButton" Content="-" HorizontalAlignment="Left" Margin="35,18,0,0" VerticalAlignment="Top" Width="20" Height="20">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Click">
-                                        <i:InvokeCommandAction Command="{Binding RemoveVoter}"
+                                        <i:InvokeCommandAction Command="{Binding RemoveVoters}"
                                            CommandParameter="{Binding SelectedItems, ElementName=VotersList}"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>

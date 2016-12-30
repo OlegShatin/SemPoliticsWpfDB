@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Windows;
 
+
 namespace SemPoliticsWpfDB.ViewModels
 {
     class Root : BaseViewModel
@@ -98,11 +99,11 @@ namespace SemPoliticsWpfDB.ViewModels
                 {
                     if (context.Entry(electionVM.Election).State == EntityState.Added)
                     {
-                        context.Elections.Local.Remove(context.Elections.Local.Where(x => x == electionVM.Election && x == electionVM.Election).FirstOrDefault());
+                        context.Elections.Local.Remove(context.Elections.Local.Where(x => x == electionVM.Election).FirstOrDefault());
                     }
                     else
                     {
-                        context.Elections.Remove(context.Elections.Local.Where(x => x.Id == electionVM.Election.Id && x.Id == electionVM.Election.Id).FirstOrDefault());
+                        context.Elections.Remove(context.Elections.Local.Where(x => x.Id == electionVM.Election.Id).FirstOrDefault());
                     }
                     ElectionsList.Remove(electionVM);
                 } 
@@ -124,25 +125,36 @@ namespace SemPoliticsWpfDB.ViewModels
         public ObservableCollection<UserViewModel> VotersVMList { get; set; }
         public ObservableCollection<UserViewModel> AgentsVMList { get; set; }
 
-        //add new Voter button
+        //add new Voter and Agent buttons
         private DelegateCommand _addVoterCommand;
         public ICommand AddVoter => _addVoterCommand ?? (_addVoterCommand = new DelegateCommand(AddVoterMethod));
         private DelegateCommand _addAgentCommand;
         public ICommand AddAgent => _addAgentCommand ?? (_addAgentCommand = new DelegateCommand(AddAgentMethod));
         private void AddVoterMethod()
         {
-            VotersVMList.Add(new UserViewModel(AddUser("USER"), context));
+            while (VotersVMList.Where(x => x.User.Email.Contains("newUSER_" + _newUsersCounter + "@example.com")).Count() > 0)
+            {
+                _newUsersCounter++;
+            }
+            var newVM = new UserViewModel(AddUser("USER"), context);
+            VotersVMList.Add(newVM);
             OnPropertyChanged("VotersVMList");
+            newVM.Password = "1234";
         }
         private void AddAgentMethod()
         {
-            VotersVMList.Add(new UserViewModel(AddUser("AGENT"), context));
+            while (AgentsVMList.Where(x => x.User.Email.Contains("newAGENT_" + _newUsersCounter + "@example.com")).Count() > 0)
+            {
+                _newUsersCounter++;
+            }
+            var newVM = new UserViewModel(AddUser("AGENT"), context);
+            AgentsVMList.Add(newVM);
             OnPropertyChanged("VotersVMList");
+            newVM.Password = "1234";
         }
         private int _newUsersCounter = 0;
         private User AddUser(string role)
-        {
-            _newUsersCounter++;
+        {            
             User newUser = new User()
             {
                 Name = "newUser_" + _newUsersCounter,
@@ -151,7 +163,7 @@ namespace SemPoliticsWpfDB.ViewModels
                 PassportNumber = "000000",
                 PassportSeries = "0000",
                 //password: 1234
-                PasswordHash = Hash("1234"),
+                PasswordHash = "1234",
                 Email = "new" + role + "_" + _newUsersCounter + "@example.com",
                 RoleName = role,
                 Role = context.UserRoles.Where(x => x.Role.Equals(role)).FirstOrDefault(),
@@ -160,16 +172,86 @@ namespace SemPoliticsWpfDB.ViewModels
 
             };
             context.Users.Add(newUser);
-            return newUser;
-
-            
+            return newUser;            
         }
-        public static string Hash(string input)
+
+        //remove Voters and Agents button
+        private DelegateCommand<object> _removeVotersCommand;
+        public ICommand RemoveVoters => _removeVotersCommand ??
+            (_removeVotersCommand = new DelegateCommand<object>(removeVotersCommandMethod));
+
+
+        private void removeVotersCommandMethod(object toRemoveVotersRaw)
         {
-            return string.Join("", (new System.Security.Cryptography.SHA1Managed().ComputeHash(System.Text.Encoding.UTF8.GetBytes(input))).Select(x => x.ToString("x2")).ToArray());
+            bool someVotersWasNotRemoved = false;
+            System.Collections.IList items = (System.Collections.IList)toRemoveVotersRaw;
+            foreach (var voterVM in items.Cast<UserViewModel>().ToList())
+            {
+                //check is this voter was just added or it was got from db
+                if (voterVM.User?.VotedElections.Count == 0)
+                {
+                    if (context.Entry(voterVM.User).State == EntityState.Added)
+                    {
+                        context.Users.Local.Remove(context.Users.Local.Where(x => x == voterVM.User).FirstOrDefault());
+                    }
+                    else
+                    {
+                        context.Users.Remove(context.Users.Local.Where(x => x.Id == voterVM.User.Id).FirstOrDefault());
+                    }
+                    VotersVMList.Remove(voterVM);
+                }
+                else
+                {
+                    someVotersWasNotRemoved = true;
+                }
+            }
+            OnPropertyChanged("VotersVMList");
+            if (someVotersWasNotRemoved)
+            {
+                MessageBox.Show("Некоторые голосующие не были удалены, т.к. содержат зарегестрированных кандидатов. Удалите всех кандидатов из списка кандидатов выборов перед удалением",
+                    "Предупреждение", MessageBoxButton.OK);
+            }
         }
 
+        private DelegateCommand<object> _removeAgentsCommand;
+        public ICommand RemoveAgents => _removeAgentsCommand ??
+            (_removeAgentsCommand = new DelegateCommand<object>(removeAgentsCommandMethod));
 
+        private void removeAgentsCommandMethod(object toRemoveAgentsRaw)
+        {
+            bool someAgentsWasNotRemoved = false;
+            System.Collections.IList items = (System.Collections.IList)toRemoveAgentsRaw;
+            foreach (var agentVM in items.Cast<UserViewModel>().ToList())
+            {
+                //check is this agent was just added or it was got from db
+                if (agentVM.User?.VotedElections.Count == 0)
+                {
+                    if (context.Entry(agentVM.User).State == EntityState.Added)
+                    {
+                        context.Users.Local.Remove(context.Users.Local.Where(x => x == agentVM.User).FirstOrDefault());
+                    }
+                    else
+                    {
+                        context.Users.Remove(context.Users.Local.Where(x => x.Id == agentVM.User.Id).FirstOrDefault());
+                    }
+                    AgentsVMList.Remove(agentVM);
+                }
+                else
+                {
+                    someAgentsWasNotRemoved = true;
+                }
+            }
+            OnPropertyChanged("AgentsVMList");
+            if (someAgentsWasNotRemoved)
+            {
+                MessageBox.Show("Некоторые Агенты не были удалены, т.к. содержат зарегестрированных кандидатов. Удалите всех кандидатов из списка кандидатов выборов перед удалением",
+                    "Предупреждение", MessageBoxButton.OK);
+            }
+        }
     }
+
+
+
+    
 }
 
