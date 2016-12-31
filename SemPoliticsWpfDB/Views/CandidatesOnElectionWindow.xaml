@@ -88,7 +88,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                </GridView>
+                </GridView>                
             </ListView.View>
             <ListView.ItemTemplate>
                 <DataTemplate DataType="viewModels:CandidateOnElectionViewModel"/>

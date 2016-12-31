@@ -7,7 +7,7 @@ using Politics;
 
 namespace SemPoliticsWpfDB.ViewModels
 {
-    class CandidateViewModel : BaseViewModel,IEquatable<CandidateViewModel>
+    public class CandidateViewModel : BaseViewModel,IEquatable<CandidateViewModel>
     {
         public Candidate Candidate { get; set; }
         private PoliticsDBContext _dbcontext;
@@ -21,14 +21,42 @@ namespace SemPoliticsWpfDB.ViewModels
         public string ImageSrc
         {
             get { return Candidate.ImageSrc; }
-            set { Candidate.ImageSrc = value; }
+            set
+            {
+                Candidate.ImageSrc = value;
+                OnPropertyChanged("ImageSrc");
+            }
         }
         public string Name
         {
             get { return Candidate.Name; }
-            set { Candidate.Name = value; }
+            set
+            {
+                Candidate.Name = value;
+                OnPropertyChanged("Name");
+            }
         }
-        
+
+        public string ElectionProgram
+        {
+            get { return Candidate.ElectionProgram; }
+            set
+            {
+                Candidate.ElectionProgram = value;
+                OnPropertyChanged("ElectionProgram");
+            }
+        }
+
+        public string Achievements
+        {
+            get { return Candidate.Achievements; }
+            set
+            {
+                Candidate.Achievements = value;
+                OnPropertyChanged("Achievements");
+            }
+        }
+
 
 
         public bool Equals(CandidateViewModel other)

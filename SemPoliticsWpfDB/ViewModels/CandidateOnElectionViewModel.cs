@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SemPoliticsWpfDB.ViewModels
 {
-    class CandidateOnElectionViewModel : CandidateViewModel
+    public class CandidateOnElectionViewModel : CandidateViewModel
     {
         public CandidateOnElectionViewModel(CandidateOnElection candidateItem, PoliticsDBContext dbcontext) : base(candidateItem.Candidate, dbcontext)
         {

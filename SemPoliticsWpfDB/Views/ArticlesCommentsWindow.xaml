@@ -1,0 +1,31 @@
+﻿<Window x:Class="SemPoliticsWpfDB.Views.ArticlesCommentsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SemPoliticsWpfDB.Views"
+        mc:Ignorable="d"
+        Title="ArticlesCommentsWindow" Height="300" Width="545.865">
+    <Grid>
+        <ListView ItemsSource="{Binding CommentsVMList}">
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="viewModels:CommentViewModel">
+                    <TreeView  Margin="5">
+                        <TreeView.ItemTemplate>
+                            <HierarchicalDataTemplate ItemsSource="{Binding Items}">
+                                <TextBlock Text="{Binding Text}"/>
+                                <HierarchicalDataTemplate.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Text}"></TextBlock>
+                                    </DataTemplate>
+                                </HierarchicalDataTemplate.ItemTemplate>
+                            </HierarchicalDataTemplate>
+                        </TreeView.ItemTemplate>
+                    </TreeView>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+            
+        </ListView>
+        
+    </Grid>
+</Window>

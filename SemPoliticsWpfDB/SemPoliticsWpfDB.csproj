@@ -82,7 +82,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\ImageSourceLoader.cs" />
+    <Compile Include="ViewModels\ArticleViewModel.cs" />
+    <Compile Include="ViewModels\CommentViewModel.cs" />
+    <Compile Include="Views\AgentsCandidateWindow.xaml.cs">
+      <DependentUpon>AgentsCandidateWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ArticlesCommentsWindow.xaml.cs">
+      <DependentUpon>ArticlesCommentsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Scripts\AllowableCharactersTextBoxBehavior.cs" />
+    <Compile Include="Views\UsersElectionsWindow.xaml.cs">
+      <DependentUpon>UsersElectionsWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\AgentsCandidateWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ArticlesCommentsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CandidatesOnElectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -111,6 +131,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\Styles\EditableLabelStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\UsersElectionsWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

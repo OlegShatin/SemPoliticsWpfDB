@@ -11,30 +11,52 @@ using System.Windows;
 
 namespace SemPoliticsWpfDB.ViewModels
 {
-    class Root : BaseViewModel
+    public class Root : BaseViewModel
     {
         public ObservableCollection<ElectionViewModel> ElectionsList { get; set; }
+        private ObservableCollection<CandidateViewModel> _allCandidatesList;
+        public virtual ObservableCollection<CandidateViewModel> AllCandidatesList
+        {
+            get
+            {
+                if (_allCandidatesList == null)
+                {
+                    _allCandidatesList = new ObservableCollection<CandidateViewModel>();
+                    foreach (var candidate in context.Candidates.ToList())
+                    {
+                        _allCandidatesList.Add(new CandidateViewModel(candidate, context));
+                        context.CandidatesList.Load();
+                    }
+                }
+                return _allCandidatesList;
+            }
+            set
+            {
+                _allCandidatesList = value;
+                OnPropertyChanged("AllCandidatesList");
+            }
+        }
         PoliticsDBContext context;
         public Root()
         {
             ElectionsList = new ObservableCollection<ElectionViewModel>();
             context = new PoliticsDBContext();
-            ElectionViewModel.AllCandidatesList = new ObservableCollection<CandidateViewModel>();
-            foreach (var candidate in context.Candidates.ToList())
-            {
-                ElectionViewModel.AllCandidatesList.Add(new CandidateViewModel(candidate, context));
-            }
-            context.CandidatesList.Load();
 
             foreach (var election in context.Elections)
             {
-                ElectionsList.Add(new ElectionViewModel(election, context));
+                ElectionsList.Add(new ElectionViewModel(election, context, this));
             }
 
             VotersVMList = new ObservableCollection<UserViewModel>();
             foreach (var voter in context.Users.Where(x => x.RoleName.Equals("USER")).ToList())
             {
-                VotersVMList.Add(new UserViewModel(voter, context));
+                VotersVMList.Add(new UserViewModel(voter, context, this));
+            }
+
+            AgentsVMList = new ObservableCollection<UserViewModel>();
+            foreach (var agent in context.Users.Where(x => x.RoleName.Equals("AGENT")).ToList())
+            {
+                AgentsVMList.Add(new UserViewModel(agent, context, this));
             }
 
         }
@@ -45,7 +67,7 @@ namespace SemPoliticsWpfDB.ViewModels
         {
             try
             {
-                    
+
                 context.SaveChanges();
             }
             catch (DbUpdateException e)
@@ -79,7 +101,7 @@ namespace SemPoliticsWpfDB.ViewModels
             };
             context.CandidatesList.Add(defaultCand1);
             context.CandidatesList.Add(defaultCand2);
-            ElectionsList.Add(new ElectionViewModel(election, context));
+            ElectionsList.Add(new ElectionViewModel(election, context, this));
         }
 
         //remove elections button
@@ -91,7 +113,7 @@ namespace SemPoliticsWpfDB.ViewModels
         private void removeElectionsCommandMethod(object toRemoveElectionsRaw)
         {
             bool someElectionsWasNotRemoved = false;
-            System.Collections.IList items = (System.Collections.IList)toRemoveElectionsRaw;            
+            System.Collections.IList items = (System.Collections.IList)toRemoveElectionsRaw;
             foreach (var electionVM in items.Cast<ElectionViewModel>().ToList())
             {
                 //check is this election was just added or it was got from db
@@ -106,11 +128,11 @@ namespace SemPoliticsWpfDB.ViewModels
                         context.Elections.Remove(context.Elections.Local.Where(x => x.Id == electionVM.Election.Id).FirstOrDefault());
                     }
                     ElectionsList.Remove(electionVM);
-                } 
+                }
                 else
                 {
                     someElectionsWasNotRemoved = true;
-                }               
+                }
             }
             OnPropertyChanged("ElectionsList");
             if (someElectionsWasNotRemoved)
@@ -136,7 +158,7 @@ namespace SemPoliticsWpfDB.ViewModels
             {
                 _newUsersCounter++;
             }
-            var newVM = new UserViewModel(AddUser("USER"), context);
+            var newVM = new UserViewModel(AddUser("USER"), context, this);
             VotersVMList.Add(newVM);
             OnPropertyChanged("VotersVMList");
             newVM.Password = "1234";
@@ -147,14 +169,14 @@ namespace SemPoliticsWpfDB.ViewModels
             {
                 _newUsersCounter++;
             }
-            var newVM = new UserViewModel(AddUser("AGENT"), context);
+            var newVM = new UserViewModel(AddUser("AGENT"), context, this);
             AgentsVMList.Add(newVM);
             OnPropertyChanged("VotersVMList");
             newVM.Password = "1234";
         }
         private int _newUsersCounter = 0;
         private User AddUser(string role)
-        {            
+        {
             User newUser = new User()
             {
                 Name = "newUser_" + _newUsersCounter,
@@ -172,7 +194,7 @@ namespace SemPoliticsWpfDB.ViewModels
 
             };
             context.Users.Add(newUser);
-            return newUser;            
+            return newUser;
         }
 
         //remove Voters and Agents button
@@ -208,7 +230,7 @@ namespace SemPoliticsWpfDB.ViewModels
             OnPropertyChanged("VotersVMList");
             if (someVotersWasNotRemoved)
             {
-                MessageBox.Show("Некоторые голосующие не были удалены, т.к. содержат зарегестрированных кандидатов. Удалите всех кандидатов из списка кандидатов выборов перед удалением",
+                MessageBox.Show("Некоторые голосующие не были удалены, т.к. их голос учтен на некоторых выборах. Удаление невозможно, т.к. это повлияет на результаты выборов",
                     "Предупреждение", MessageBoxButton.OK);
             }
         }
@@ -224,7 +246,7 @@ namespace SemPoliticsWpfDB.ViewModels
             foreach (var agentVM in items.Cast<UserViewModel>().ToList())
             {
                 //check is this agent was just added or it was got from db
-                if (agentVM.User?.VotedElections.Count == 0)
+                if (!agentVM.HasCandidate)
                 {
                     if (context.Entry(agentVM.User).State == EntityState.Added)
                     {
@@ -244,14 +266,81 @@ namespace SemPoliticsWpfDB.ViewModels
             OnPropertyChanged("AgentsVMList");
             if (someAgentsWasNotRemoved)
             {
-                MessageBox.Show("Некоторые Агенты не были удалены, т.к. содержат зарегестрированных кандидатов. Удалите всех кандидатов из списка кандидатов выборов перед удалением",
+                MessageBox.Show("Некоторые агенты не были удалены, т.к. к ним уже привязаны кандидаты. Удалите этих кандидатов или смените агентов для них",
                     "Предупреждение", MessageBoxButton.OK);
             }
+        }
+
+        //ArticlesList
+        private ObservableCollection<ArticleViewModel> _articlesVMList;
+        public virtual ObservableCollection<ArticleViewModel> ArticlesVMList
+        {
+            get
+            {
+                if (_articlesVMList == null)
+                {
+                    _articlesVMList = new ObservableCollection<ArticleViewModel>();
+                    foreach (var article in context.Articles.OrderBy((x => x.SendingTime)).ToList())
+                    {
+                        _articlesVMList.Add(new ArticleViewModel(article, context, this));
+                    }
+                }
+                return _articlesVMList;
+            }
+            set
+            {
+                _articlesVMList = value;
+                OnPropertyChanged("ArticlesVMList");
+            }
+        }
+        //add article
+        private DelegateCommand _addArticleCommand;
+        public ICommand AddArticle => _addArticleCommand ?? (_addArticleCommand = new DelegateCommand(AddArticleMethod));
+        private void AddArticleMethod()
+        {
+            Article newArticle = new Article()
+            {
+                Headline = "Заголовок",
+                Content = "Текст",
+                SendingTime = DateTimeOffset.Now
+            };
+            context.Articles.Add(newArticle);
+            ArticlesVMList.Add(new ArticleViewModel(newArticle, context, this));
+            OnPropertyChanged("ArticlesVMList");
+        }
+        //remove articles
+        private DelegateCommand<object> _removeArticlesCommand;
+        public ICommand RemoveArticles => _removeArticlesCommand ??
+            (_removeArticlesCommand = new DelegateCommand<object>(removeArticlesCommandMethod));
+
+        private void removeArticlesCommandMethod(object toRemoveArticlesRaw)
+        {
+
+            var result = MessageBox.Show("Статьи будут удалены со всеми комментариями, вы уверены?",
+                    "Предупреждение", MessageBoxButton.YesNo);
+            if (result == MessageBoxResult.Yes)
+            {
+                System.Collections.IList items = (System.Collections.IList)toRemoveArticlesRaw;
+                foreach (var articleVM in items.Cast<ArticleViewModel>().ToList())
+                {
+                    context.Articles.Local.Remove(context.Articles.Local.Where(x => x == articleVM.Article).FirstOrDefault());
+                    if (articleVM.Article.Comments != null && articleVM.Article.Comments.Count > 0)
+                    {
+                        foreach (var comment in context.Comments.Local.Where(x => x.ArticleId == articleVM.Article?.Id))
+                        {
+                            context.Comments.Local.Remove(comment);
+                        }
+                    }
+                    ArticlesVMList.Remove(articleVM);
+                }
+                OnPropertyChanged("ArticlesVMList");
+            }
+
         }
     }
 
 
 
-    
+
 }
 

@@ -14,7 +14,7 @@ using System.Windows.Input;
 
 namespace SemPoliticsWpfDB.ViewModels
 {
-    class ElectionViewModel : BaseViewModel, IEquatable<ElectionViewModel>
+    public class ElectionViewModel : BaseViewModel, IEquatable<ElectionViewModel>
     {
         static ElectionViewModel()
         {
@@ -29,8 +29,9 @@ namespace SemPoliticsWpfDB.ViewModels
         {
 
         }
-        public ElectionViewModel(Election election, PoliticsDBContext context)
+        public ElectionViewModel(Election election, PoliticsDBContext context, Root root)
         {
+            this._root = root;
             Election = election;
             _dbcontext = context;
             MainLabel = "Выборы ";
@@ -48,6 +49,7 @@ namespace SemPoliticsWpfDB.ViewModels
         public Election Election { get; private set; }
         public String MainLabel { get; private set; }
         protected PoliticsDBContext _dbcontext;
+        private Root _root;
         public static List<string> Types { get; set; }
         public String Type
         {
@@ -107,7 +109,7 @@ namespace SemPoliticsWpfDB.ViewModels
 
         //show candidates list command
         //needed to be defined from the otside before using        
-        public static ObservableCollection<CandidateViewModel> AllCandidatesList { get; set; }
+        public ObservableCollection<CandidateViewModel> AllCandidatesList { get { return _root.AllCandidatesList; } }
         public ObservableCollection<CandidateViewModel> AllCurrentTypeCandidatesList
         {
             get
@@ -157,6 +159,7 @@ namespace SemPoliticsWpfDB.ViewModels
             set
             {
                 _currentElectionCandidatesList = value;
+                OnPropertyChanged("CurrentElectionCandidatesList");
             }
         }
         
@@ -198,18 +201,33 @@ namespace SemPoliticsWpfDB.ViewModels
 
         private void removeCandidatesFromElectionCommandMethod(object toRemoveCandidatesRaw)
         {
+            bool someCandidatesWasNotRemoved = false;
             System.Collections.IList items = (System.Collections.IList)toRemoveCandidatesRaw;            
             foreach (var candidate in items.Cast<CandidateOnElectionViewModel>().ToList())
             {
-                //check is this election was just added or it was got from db
-                if (_dbcontext.Entry(Election).State == System.Data.Entity.EntityState.Added)
+                if (candidate.Votes == 0)
                 {
-                    _dbcontext.CandidatesList.Local.Remove(_dbcontext.CandidatesList.Local.Where(x => x.Candidate == candidate.Candidate && x.Election == Election).FirstOrDefault());
-                } else
+                    //check is this election was just added or it was got from db
+                    if (_dbcontext.Entry(Election).State == System.Data.Entity.EntityState.Added)
+                    {
+                        _dbcontext.CandidatesList.Local.Remove(_dbcontext.CandidatesList.Local.Where(x => x.Candidate == candidate.Candidate && x.Election == Election).FirstOrDefault());
+                    }
+                    else
+                    {
+                        _dbcontext.CandidatesList.Remove(_dbcontext.CandidatesList.Local.Where(x => x.CandidateId == candidate.Candidate.Id && x.Election.Id == Election.Id).FirstOrDefault());
+                    }
+                    CurrentElectionCandidatesList.Remove(candidate);
+                }
+                else
                 {
-                    _dbcontext.CandidatesList.Remove(_dbcontext.CandidatesList.Local.Where(x => x.CandidateId == candidate.Candidate.Id && x.Election.Id == Election.Id).FirstOrDefault());
-                }              
-                CurrentElectionCandidatesList.Remove(candidate);
+                    someCandidatesWasNotRemoved = true;
+                }
+                
+            }
+            if (someCandidatesWasNotRemoved)
+            {
+                MessageBox.Show("Кандидатов, за которых проголосовали, нельзя снять с выборов",
+                    "Предупреждение", MessageBoxButton.OK);
             }
             OnPropertyChanged("AllCurrentTypeCandidatesList");
             OnPropertyChanged("CurrentElectionCandidatesList");

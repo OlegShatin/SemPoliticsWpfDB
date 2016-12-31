@@ -1,5 +1,7 @@
 ﻿using Politics;
 using SemPoliticsWpfDB.Commands;
+using SemPoliticsWpfDB.Views;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -9,12 +11,14 @@ namespace SemPoliticsWpfDB.ViewModels
     public class UserViewModel : BaseViewModel
     {
         private PoliticsDBContext context;
+        private Root root;
         public User User { get; set; }
 
-        public UserViewModel(User user, PoliticsDBContext context)
+        public UserViewModel(User user, PoliticsDBContext context, Root root)
         {
             this.User = user;
             this.context = context;
+            this.root = root;
         }
         public static string Hash(string input)
         {
@@ -186,6 +190,77 @@ namespace SemPoliticsWpfDB.ViewModels
                 OnPropertyChanged("Timezone");
             }
         }
+
+        //show elections list
+        private DelegateCommand _showElectionsCommand;
+        public ICommand ShowElections => _showElectionsCommand ?? (_showElectionsCommand = new DelegateCommand(ShowElectionsMethod));
+        private void ShowElectionsMethod()
+        {
+            UsersElectionsWindow w = new UsersElectionsWindow();
+            w.DataContext = this;
+            w.Show();
+        }
+        private ObservableCollection<ElectionViewModel> _electionsVMList;
+        public virtual ObservableCollection<ElectionViewModel> ElectionsVMList
+        {
+            get
+            {   if (_electionsVMList == null)
+                {
+                    _electionsVMList = new ObservableCollection<ElectionViewModel>(root.ElectionsList.Join(User.VotedElections, (x => x.Election), (y => y), ((x, y) => x)));
+                    //_electionsVMList = new ObservableCollection<ElectionViewModel>();
+                    //foreach (var election in User.VotedElections)
+                    //{
+                    //    _electionsVMList.Add(new ElectionViewModel(election, context));
+                    //}
+                }
+                return _electionsVMList;
+            }
+            set
+            {
+                _electionsVMList = value;
+                OnPropertyChanged("ElectionsVMList");
+            }
+        }
+
+        //show candidate button
+        public bool HasCandidate
+        {
+            get
+            {
+                return User.RoleName.Equals("AGENT") && User.Candidate.Count > 0;
+            }
+        }
+        private DelegateCommand _showCandidateCommand;
+        public ICommand ShowCandidate => _showCandidateCommand ?? (_showCandidateCommand = new DelegateCommand(ShowCandidateMethod));
+        private void ShowCandidateMethod()
+        {
+            AgentsCandidateWindow w = new AgentsCandidateWindow();
+            w.DataContext = this;
+            w.Show();
+        }
+        private CandidateViewModel _candidateVM;
+        public virtual CandidateViewModel CandidateVM
+        {
+            get
+            {
+                if (_candidateVM == null && HasCandidate)
+                {
+                    _candidateVM = root.AllCandidatesList.Join(User.Candidate, (x => x.Candidate), (y => y), ((x, y) => x)).FirstOrDefault();
+                    //_candidateVM = new ObservableCollection<ElectionViewModel>();
+                    //foreach (var election in User.VotedElections)
+                    //{
+                    //    _candidateVM.Add(new ElectionViewModel(election, context));
+                    //}
+                }
+                return _candidateVM;
+            }
+            set
+            {
+                _candidateVM = value;
+                OnPropertyChanged("CandidateVM");
+            }
+        }
+
 
     }
 }

@@ -159,14 +159,27 @@
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
-                                        <GridViewColumn Header="Временная зона по UTC" Width="40">
+                                        <GridViewColumn Header="Временная зона по UTC" Width="45">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
-                                                    <TextBox MaxLength="3" TextWrapping="Wrap" MaxWidth="150" Margin="4" Text="{Binding Timezone, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="30">
+                                                    <TextBox MaxLength="3" TextWrapping="Wrap" MaxWidth="150" Margin="4" Text="{Binding Timezone, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="25">
                                                         <i:Interaction.Behaviors>
                                                             <v:AllowableCharactersTextBoxBehavior RegularExpression="^[0-9.\-]+$" MaxLength="3" />
                                                         </i:Interaction.Behaviors>
                                                     </TextBox>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Участие в выборах">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="Список выборов">
+                                                        <i:Interaction.Triggers>
+                                                            <i:EventTrigger EventName="Click">
+                                                                <i:InvokeCommandAction Command="{Binding ShowElections}"/>
+                                                            </i:EventTrigger>
+                                                        </i:Interaction.Triggers>
+                                                    </Button>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
@@ -193,8 +206,142 @@
                             </Button>
                         </Grid>
                     </TabItem>
-                    <TabItem Header="Агенты кандидатов"></TabItem>
+                    <TabItem Header="Агенты кандидатов">
+                        <Grid Background="#FFE5E5E5"  Margin="10,4,11,11">
+                            <ListView x:Name="AgentsList" ItemsSource="{Binding AgentsVMList,UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="10,43,10,10">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Имя" Width="100">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Style="{StaticResource EditableLabelStyle}" Content="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Label>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Фамилия" Width="100">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Label Style="{StaticResource EditableLabelStyle}" Content="{Binding Surname, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Label>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Хеш-пароль (пароль -> хэш)" Width="170">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Text="{Binding Password, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" Width="155">
+                                                        <i:Interaction.Triggers>
+                                                            <i:EventTrigger EventName="TextChanged">
+                                                                <i:InvokeCommandAction Command="{Binding ChangePasswordText}" CommandParameter="{Binding Text, ElementName=PassTB}"/>
+                                                            </i:EventTrigger>
+                                                            <i:EventTrigger EventName="LostFocus">
+                                                                <i:InvokeCommandAction Command="{Binding ChangePassword}"/>
+                                                            </i:EventTrigger>
+                                                        </i:Interaction.Triggers>
+                                                    </TextBox>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Email" Width="150">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="135"></TextBox>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Временная зона по UTC" Width="45">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox MaxLength="3" TextWrapping="Wrap" MaxWidth="150" Margin="4" Text="{Binding Timezone, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="25">
+                                                        <i:Interaction.Behaviors>
+                                                            <v:AllowableCharactersTextBoxBehavior RegularExpression="^[0-9.\-]+$" MaxLength="3" />
+                                                        </i:Interaction.Behaviors>
+                                                    </TextBox>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="Кандидат" Width="70">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="Показать" IsEnabled="{Binding HasCandidate}">
+                                                        <i:Interaction.Triggers>
+                                                            <i:EventTrigger EventName="Click">
+                                                                <i:InvokeCommandAction Command="{Binding ShowCandidate}"/>
+                                                            </i:EventTrigger>
+                                                        </i:Interaction.Triggers>
+                                                    </Button>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate DataType="viewModels:UserViewModel"/>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <Button x:Name="addAgentButton" Content="+" HorizontalAlignment="Left" Margin="10,18,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding AddAgent}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                            <Button x:Name="removeAgentButton" Content="-" HorizontalAlignment="Left" Margin="35,18,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="Click">
+                                        <i:InvokeCommandAction Command="{Binding RemoveAgents}"
+                                           CommandParameter="{Binding SelectedItems, ElementName=AgentsList}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </Button>
+                        </Grid>
+                    </TabItem>
                 </TabControl>
+            </TabItem>
+            <TabItem Header="Новости">
+                <Grid Background="#FFE5E5E5"  Margin="10,4,11,11">
+                    <ListView x:Name="Articles" ItemsSource="{Binding ArticlesVMList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10,43,10,18">
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="viewModels:ArticleViewModel">
+                                <Expander>
+                                    <Expander.Header>
+                                        <TextBox TextWrapping="WrapWithOverflow" Text="{Binding Headline, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                    </Expander.Header>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                            <RowDefinition></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <TextBox Grid.Row="0" Width="800"  TextWrapping="WrapWithOverflow" Text="{Binding Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                                        <DatePicker Grid.Row="1" SelectedDate="{Binding Date, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Button Grid.Row="2" Content="Комментарии">
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click">
+                                                    <i:InvokeCommandAction Command="{Binding ShowComments}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </Button>
+                                    </Grid>
+                                </Expander>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <Button x:Name="addArticleButton" Content="+" HorizontalAlignment="Left" Margin="10,18,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction Command="{Binding AddArticle}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                    <Button x:Name="removeArticlesButton" Content="-" HorizontalAlignment="Left" Margin="35,18,0,0" VerticalAlignment="Top" Width="20" Height="20">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Click">
+                                <i:InvokeCommandAction Command="{Binding RemoveArticles}"
+                                           CommandParameter="{Binding SelectedItems, ElementName=Articles}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </Button>
+                </Grid>
             </TabItem>
         </TabControl>
         <Button x:Name="saveChangesButton" Content="Сохранить изменения" HorizontalAlignment="Left" Margin="825,23,0,0" VerticalAlignment="Top" Width="140">
