@@ -68,9 +68,9 @@ namespace SemPoliticsWpfDB.ViewModels
                 if (_commentsVMList == null)
                 {
                     _commentsVMList = new ObservableCollection<CommentViewModel>();
-                    foreach (var comment in Article?.Comments.Where(x => x.ParentCommentId == null))
+                    foreach (var comment in Article?.Comments.Where(x => x.ParentCommentId == null).OrderByDescending(x => x.Rating))
                     {
-                        _commentsVMList.Add(new CommentViewModel(comment, _context));
+                        _commentsVMList.Add(new CommentViewModel(comment, _commentsVMList, _context));
                     }
                 }                
                 return _commentsVMList;

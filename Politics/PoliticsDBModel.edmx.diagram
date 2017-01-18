@@ -30,6 +30,7 @@
         <AssociationConnector Association="Model.PoliticsModel.users_role_fkey" ManuallyRouted="false" />
         <AssociationConnector Association="Model.PoliticsModel.cookies_user_id_fkey" ManuallyRouted="false" />
         <AssociationConnector Association="Model.PoliticsModel.votes" ManuallyRouted="false" />
+        <AssociationConnector Association="Model.PoliticsModel.comments_users_fk" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

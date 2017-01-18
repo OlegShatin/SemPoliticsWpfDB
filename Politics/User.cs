@@ -21,6 +21,7 @@ namespace Politics
             this.RecepiedMessages = new HashSet<Message>();
             this.SendedMessages = new HashSet<Message>();
             this.VotedElections = new HashSet<Election>();
+            this.comments = new HashSet<Comment>();
         }
     
         public int Id { get; set; }
@@ -45,5 +46,7 @@ namespace Politics
         public virtual UserCookie Cookies { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Election> VotedElections { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Comment> comments { get; set; }
     }
 }

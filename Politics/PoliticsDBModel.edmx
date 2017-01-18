@@ -205,6 +205,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="comments_users_fk">
+          <End Role="users" Type="Self.users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="comments" Type="Self.comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="users">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="comments">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="cookies_user_id_fkey">
           <End Role="users" Type="Self.users" Multiplicity="1" />
           <End Role="cookies" Type="Self.cookies" Multiplicity="0..1" />
@@ -341,6 +355,10 @@
             <End Role="comments" EntitySet="comments" />
             <End Role="comments1" EntitySet="comments" />
           </AssociationSet>
+          <AssociationSet Name="comments_users_fk" Association="Self.comments_users_fk">
+            <End Role="users" EntitySet="users" />
+            <End Role="comments" EntitySet="comments" />
+          </AssociationSet>
           <AssociationSet Name="cookies_user_id_fkey" Association="Self.cookies_user_id_fkey">
             <End Role="users" EntitySet="users" />
             <End Role="cookies" EntitySet="cookies" />
@@ -419,6 +437,7 @@
           <NavigationProperty Name="Article" Relationship="Self.comments_article_id_fkey" FromRole="comments" ToRole="news" />
           <NavigationProperty Name="ChildrenComments" Relationship="Self.comments_parent_comment_id_fkey" FromRole="comments" ToRole="comments1" />
           <NavigationProperty Name="ParentComment" Relationship="Self.comments_parent_comment_id_fkey" FromRole="comments1" ToRole="comments" />
+          <NavigationProperty Name="Author" Relationship="Model.PoliticsModel.comments_users_fk" FromRole="Comment" ToRole="User" />
         </EntityType>
         <EntityType Name="ElectionType">
           <Key>
@@ -509,6 +528,7 @@
           <NavigationProperty Name="Role" Relationship="Self.users_role_fkey" FromRole="users" ToRole="user_roles" />
           <NavigationProperty Name="Cookies" Relationship="Self.cookies_user_id_fkey" FromRole="users" ToRole="cookies" />
           <NavigationProperty Name="VotedElections" Relationship="Self.votes" FromRole="users" ToRole="elections" />
+          <NavigationProperty Name="comments" Relationship="Model.PoliticsModel.comments_users_fk" FromRole="User" ToRole="Comment" />
         </EntityType>
         <EntityType Name="UserCookie">
           <Key>
@@ -735,7 +755,25 @@
             <End Role="elections" EntitySet="Elections" />
             <End Role="users" EntitySet="Users" />
           </AssociationSet>
+          <AssociationSet Name="comments_users_fk" Association="Model.PoliticsModel.comments_users_fk">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="comments_users_fk">
+          <End Type="Model.PoliticsModel.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Model.PoliticsModel.Comment" Role="Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->

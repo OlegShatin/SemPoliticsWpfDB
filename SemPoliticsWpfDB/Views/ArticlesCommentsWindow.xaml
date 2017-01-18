@@ -4,28 +4,45 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SemPoliticsWpfDB.Views"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:v="clr-namespace:SemPoliticsWpfDB.Views.Scripts"
         mc:Ignorable="d"
-        Title="ArticlesCommentsWindow" Height="300" Width="545.865">
+        Title="{Binding Headline}" Height="500" Width="600">
     <Grid>
-        <ListView ItemsSource="{Binding CommentsVMList}">
-            <ListView.ItemTemplate>
-                <DataTemplate DataType="viewModels:CommentViewModel">
-                    <TreeView  Margin="5">
-                        <TreeView.ItemTemplate>
-                            <HierarchicalDataTemplate ItemsSource="{Binding Items}">
-                                <TextBlock Text="{Binding Text}"/>
-                                <HierarchicalDataTemplate.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Text}"></TextBlock>
-                                    </DataTemplate>
-                                </HierarchicalDataTemplate.ItemTemplate>
-                            </HierarchicalDataTemplate>
-                        </TreeView.ItemTemplate>
-                    </TreeView>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-            
-        </ListView>
-        
+        <TreeView  Margin="5" ItemsSource="{Binding CommentsVMList}">            
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <Grid>                        
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" ></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBox TextWrapping="Wrap" MaxWidth="150" Margin="4" Text="{Binding Rating, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="25">
+                            <i:Interaction.Behaviors>
+                                <v:AllowableCharactersTextBoxBehavior RegularExpression="^[0-9.\-]+$" MaxLength="5"/>
+                            </i:Interaction.Behaviors>
+                        </TextBox>
+                        <GridSplitter Grid.Column="1"></GridSplitter>                        
+                        <Label Grid.Column="2" Content="{Binding Author}" FontWeight="Bold"/>
+                        <GridSplitter Grid.Column="3"></GridSplitter>
+                        <Label Grid.Column="4" Style="{StaticResource EditableLabelStyle}" Content="{Binding Text, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"></Label>
+                        <GridSplitter Grid.Column="5"></GridSplitter>
+                        <Button Grid.Column="6" x:Name="removeCommentButton" Content="x" VerticalAlignment="Stretch" Width="15" Height="15" HorizontalAlignment="Right" FontSize="8" VerticalContentAlignment="Stretch" FontStretch="Normal">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Click">
+                                    <i:InvokeCommandAction Command="{Binding RemoveComment}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </Button>
+                    </Grid>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+
+
     </Grid>
 </Window>

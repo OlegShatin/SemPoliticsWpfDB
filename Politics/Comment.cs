@@ -32,5 +32,6 @@ namespace Politics
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Comment> ChildrenComments { get; set; }
         public virtual Comment ParentComment { get; set; }
+        public virtual User Author { get; set; }
     }
 }
